@@ -1,0 +1,152 @@
+<!-- Backdrop Overlay -->
+<div *ngIf="isOpen" class="modal-backdrop" (click)="closeModal()"></div>
+
+<!-- Modal Container -->
+<div *ngIf="isOpen" class="modal-container">
+  <div class="modal-content">
+    <!-- Close Button -->
+    <button class="modal-close" (click)="closeModal()">✕</button>
+
+    <!-- Left Section - Brand -->
+    <div class="modal-left">
+      <div class="modal-brand">
+        <div class="brand-logo">W.</div>
+        <div class="brand-emoji">😊</div>
+      </div>
+      <p class="brand-text">Welcome!</p>
+    </div>
+
+    <!-- Right Section - Form -->
+    <div class="modal-right">
+      <!-- LOGIN FORM -->
+      <div *ngIf="!isRegisterMode" class="auth-form">
+        <h2>Giriş Yap</h2>
+        
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label>E-MAIL VEYA KULLANICI ADI</label>
+            <input 
+              type="text" 
+              placeholder="E-mail veya Kullanıcı Adı"
+              formControlName="email"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>ŞİFRE</label>
+            <input 
+              type="password" 
+              placeholder="Şifre"
+              formControlName="password"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="keepLogged" formControlName="keepLogged" />
+            <label for="keepLogged">Beni hatırla</label>
+          </div>
+
+          <button type="submit" class="btn-submit">Giriş Yap</button>
+        </form>
+
+        <div class="forgot-password">
+          <a href="javascript:void(0)">Şifremi unuttum?</a>
+        </div>
+
+        <div class="social-login">
+          <p>Veya giriş yap:</p>
+          <div class="social-buttons">
+            <button class="social-btn google">Google</button>
+            <button class="social-btn facebook">Facebook</button>
+            <button class="social-btn twitter">Twitter</button>
+          </div>
+        </div>
+
+        <div class="auth-switch">
+          <p>Üye değil misin? <a href="javascript:void(0)" (click)="toggleMode()">Kayıt ol</a></p>
+        </div>
+
+        <div class="demo-credentials">
+          <p><strong>Demo:</strong> ahmet@mail.com / password123</p>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div *ngIf="isRegisterMode" class="auth-form">
+        <h2>Kayıt Ol</h2>
+        
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="form-group">
+            <label>KULLANICI ADI</label>
+            <input 
+              type="text" 
+              placeholder="Kullanıcı Adı"
+              formControlName="username"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>E-MAIL</label>
+            <input 
+              type="email" 
+              placeholder="E-mail"
+              formControlName="email"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>ŞİFRE</label>
+              <input 
+                type="password" 
+                placeholder="Şifre"
+                formControlName="password"
+                class="form-input"
+              />
+            </div>
+            <div class="form-group">
+              <label>ŞİFRE ONAYI</label>
+              <input 
+                type="password" 
+                placeholder="Şifre Onayla"
+                formControlName="confirmPassword"
+                class="form-input"
+              />
+            </div>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="emailNewsletter" formControlName="emailNewsletter" />
+            <label for="emailNewsletter">Beni ürünler ve hizmetler hakkında e-postalar ile bilgilendir</label>
+          </div>
+
+          <div class="form-checkbox">
+            <input type="checkbox" id="termsAccepted" formControlName="termsAccepted" />
+            <label for="termsAccepted">
+              Koşulları ve Gizlilik İlkesi'ni okudum ve kabul ediyorum.
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit">Kayıt Ol</button>
+        </form>
+
+        <div class="social-login">
+          <p>Veya kayıt ol:</p>
+          <div class="social-buttons">
+            <button class="social-btn google">Google</button>
+            <button class="social-btn twitter">Twitter</button>
+            <button class="social-btn facebook">Facebook</button>
+          </div>
+        </div>
+
+        <div class="auth-switch">
+          <p>Zaten üye misin? <a href="javascript:void(0)" (click)="toggleMode()">Giriş yap</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

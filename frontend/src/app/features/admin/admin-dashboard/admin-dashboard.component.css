@@ -1,0 +1,31 @@
+.stat-card {
+  height: 100%;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1rem 1rem 1rem 1.1rem;
+  box-shadow: 0 0.35rem 1rem rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #111827;
+}
+
+.review-item {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.review-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}

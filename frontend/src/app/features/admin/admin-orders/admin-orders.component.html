@@ -1,0 +1,180 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Siparisler</p>
+      <h2 class="h3 mb-1">Siparis Yonetimi</h2>
+      <p class="text-secondary mb-0">Siparis olusturma, durum guncelleme ve detay inceleme.</p>
+    </div>
+    <button class="btn btn-dark" type="button" (click)="toggleCreate()" [attr.aria-expanded]="showForm()">Yeni Siparis</button>
+  </div>
+
+  <div class="collapse mb-4" [class.show]="showForm()">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h3 class="h5 mb-1">{{ editMode() ? 'Siparis duzenle' : 'Yeni siparis ekle' }}</h3>
+            <p class="text-muted mb-0">Siparis sahibi, durum ve toplam tutar bilgisi.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Kapat</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label" for="orderUser">Kullanici</label>
+            <select id="orderUser" [(ngModel)]="form().userId" class="form-select">
+              <option [ngValue]="null">Kullanici secin</option>
+              @for (user of users(); track user.userId) {
+                <option [ngValue]="user.userId">{{ user.userFullName || user.userEmail }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="orderStatus">Durum</label>
+            <select id="orderStatus" [(ngModel)]="form().orderStatus" class="form-select">
+              <option value="PENDING">PENDING</option>
+              <option value="CONFIRMED">CONFIRMED</option>
+              <option value="SHIPPED">SHIPPED</option>
+              <option value="DELIVERED">DELIVERED</option>
+              <option value="CANCELLED">CANCELLED</option>
+              <option value="CART">CART</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="orderTotal">Toplam Tutar</label>
+            <input id="orderTotal" [(ngModel)]="form().orderTotalAmount" type="number" class="form-control" placeholder="0" />
+          </div>
+          <div class="col-12 text-end">
+            <button type="button" class="btn btn-dark" (click)="save()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-lg-6">
+        <label class="form-label" for="orderSearch">Siparis ara</label>
+        <input id="orderSearch" [(ngModel)]="search" (ngModelChange)="search.set($event); applyFilter()" class="form-control" placeholder="Siparis ID veya kullanici ara" />
+      </div>
+      <div class="col-lg-4">
+        <label class="form-label" for="statusFilter">Durum filtrele</label>
+        <select id="statusFilter" [(ngModel)]="statusFilter" (ngModelChange)="statusFilter.set($event); applyFilter()" class="form-select">
+          <option value="">Tum durumlar</option>
+          <option value="PENDING">PENDING</option>
+          <option value="CONFIRMED">CONFIRMED</option>
+          <option value="SHIPPED">SHIPPED</option>
+          <option value="DELIVERED">DELIVERED</option>
+          <option value="CANCELLED">CANCELLED</option>
+          <option value="CART">CART</option>
+        </select>
+      </div>
+      <div class="col-lg-2 text-lg-end">
+        <div class="text-muted small">Toplam siparis</div>
+        <div class="fs-3 fw-bold">{{ orders().length }}</div>
+      </div>
+    </div>
+  </div>
+  @if (!loading()) {
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Kullanici</th>
+                <th>Durum</th>
+                <th>Toplam</th>
+                <th>Tarih</th>
+                <th class="text-end">Islemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (filteredOrders().length) {
+                @for (order of filteredOrders(); track order.orderId) {
+                  <tr>
+                    <td>#{{ order.orderId }}</td>
+                    <td>
+                      <div class="fw-semibold">{{ userName(order.userId) }}</div>
+                      <div class="text-muted small">Kullanici ID: {{ order.userId }}</div>
+                    </td>
+                    <td>
+                      <select [(ngModel)]="order.orderStatus" class="form-select form-select-sm status-select">
+                        <option value="PENDING">PENDING</option>
+                        <option value="CONFIRMED">CONFIRMED</option>
+                        <option value="SHIPPED">SHIPPED</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                        <option value="CART">CART</option>
+                      </select>
+                    </td>
+                    <td>{{ order.orderTotalAmount | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                    <td>{{ order.orderCreatedDate | date: 'short' }}</td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm flex-wrap">
+                        <button class="btn btn-outline-success" type="button" (click)="saveStatus(order)">Durum Kaydet</button>
+                        <button class="btn btn-outline-primary" type="button" (click)="showDetails(order)">Detay</button>
+                        <button class="btn btn-outline-secondary" type="button" (click)="openEdit(order)">Duzenle</button>
+                        <button class="btn btn-outline-danger" type="button" (click)="remove(order.orderId)">Sil</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="6" class="text-center py-5 text-muted">Uygun siparis bulunamadi.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (selectedOrder()) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h3 class="h5 mb-1">Siparis #{{ selectedOrder().orderId }} detaylari</h3>
+            <p class="text-muted mb-0">Kalem listesi ve fiyat bilgileri.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="selectedOrder.set(null)">Kapat</button>
+        </div>
+
+        @if (selectedItems().length) {
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Urun</th>
+                  <th>Miktar</th>
+                  <th>Birim Fiyat</th>
+                  <th>Toplam</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of selectedItems(); track item.orderItemId) {
+                  <tr>
+                    <td>{{ productName(item.productId) }}</td>
+                    <td>{{ item.orderItemQuantity }}</td>
+                    <td>{{ item.orderItemPrice | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                    <td>{{ (item.orderItemQuantity * item.orderItemPrice) | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="alert alert-light border mb-0">Bu siparis icin kalem bulunamadi.</div>
+        }
+      </div>
+    </div>
+  }

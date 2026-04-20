@@ -1,0 +1,95 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Kategoriler</p>
+      <h2 class="h3 mb-1">Kategori Yonetimi</h2>
+      <p class="text-secondary mb-0">Urunlerin baglandigi kategori kayitlari.</p>
+    </div>
+    <button class="btn btn-dark" type="button" (click)="toggleCreate()" [attr.aria-expanded]="showForm()">Yeni Kategori</button>
+  </div>
+
+  <div class="collapse mb-4" [class.show]="showForm()">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h3 class="h5 mb-1">{{ editMode() ? 'Kategori duzenle' : 'Yeni kategori ekle' }}</h3>
+            <p class="text-muted mb-0">Kategori adini ve aciklamasini girin.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Kapat</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="categoryName">Kategori adi</label>
+            <input id="categoryName" [ngModel]="form().categoryName" (ngModelChange)="form.update(v => ({...v, categoryName: $event}))" class="form-control" placeholder="Orn. Elektronik" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="categoryDescription">Aciklama</label>
+            <input id="categoryDescription" [ngModel]="form().categoryDescription" (ngModelChange)="form.update(v => ({...v, categoryDescription: $event}))" class="form-control" placeholder="Kisa aciklama" />
+          </div>
+          <div class="col-12 text-end">
+            <button type="button" class="btn btn-dark" (click)="save()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-lg-8">
+        <label class="form-label" for="categorySearch">Kategori ara</label>
+        <input id="categorySearch" [(ngModel)]="search" (ngModelChange)="search.set($event); applyFilter()" class="form-control" placeholder="Ad veya aciklama ile ara" />
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <div class="text-muted small">Toplam kategori</div>
+        <div class="fs-3 fw-bold">{{ categories().length }}</div>
+      </div>
+    </div>
+  </div>
+
+  @if (!loading()) {
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Kategori Adi</th>
+                <th>Aciklama</th>
+                <th class="text-end">Islemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (filteredCategories().length) {
+                @for (category of filteredCategories(); track category.categoryId) {
+                  <tr>
+                    <td>#{{ category.categoryId }}</td>
+                    <td class="fw-semibold">{{ category.categoryName }}</td>
+                    <td>{{ category.categoryDescription || '-' }}</td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" type="button" (click)="openEdit(category)">Duzenle</button>
+                        <button class="btn btn-outline-danger" type="button" (click)="remove(category.categoryId)">Sil</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="4" class="text-center py-5 text-muted">Uygun kategori bulunamadi.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

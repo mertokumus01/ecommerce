@@ -1,0 +1,121 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Urunler</p>
+      <h2 class="h3 mb-1">Urun Yonetimi</h2>
+      <p class="text-secondary mb-0">Urun listesi, fiyat, stok ve kategori islemleri.</p>
+    </div>
+    <button class="btn btn-dark" type="button" (click)="toggleCreate()" [attr.aria-expanded]="showForm()">Yeni Urun</button>
+  </div>
+
+  <div class="collapse mb-4" [class.show]="showForm()">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h3 class="h5 mb-1">{{ editMode() ? 'Urun duzenle' : 'Yeni urun ekle' }}</h3>
+            <p class="text-muted mb-0">Tum alanlari doldurun ve kaydedin.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Kapat</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="productName">Urun adi</label>
+            <input id="productName" [ngModel]="form().productName" (ngModelChange)="form.update(f => ({...f, productName: $event}))" class="form-control" placeholder="Orn. Kablosuz Kulaklik" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="productCategory">Kategori</label>
+            <select id="productCategory" [ngModel]="form().categoryId" (ngModelChange)="form.update(f => ({...f, categoryId: $event}))" class="form-select">
+              <option [ngValue]="null">Kategori secin</option>
+              @for (category of categories(); track category.categoryId) {
+                <option [ngValue]="category.categoryId">{{ category.categoryName }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="productDescription">Aciklama</label>
+            <textarea id="productDescription" [ngModel]="form().productDescription" (ngModelChange)="form.update(f => ({...f, productDescription: $event}))" class="form-control" rows="4" placeholder="Urun aciklamasi"></textarea>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="productPrice">Fiyat</label>
+            <input id="productPrice" [ngModel]="form().productPrice" (ngModelChange)="form.update(f => ({...f, productPrice: $event}))" type="number" class="form-control" placeholder="0" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="productStock">Stok</label>
+            <input id="productStock" [ngModel]="form().productStock" (ngModelChange)="form.update(f => ({...f, productStock: $event}))" type="number" class="form-control" placeholder="0" />
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="button" class="btn btn-dark w-100" (click)="save()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-lg-8">
+        <label class="form-label" for="productSearch">Urun ara</label>
+        <input id="productSearch" [(ngModel)]="search" (ngModelChange)="search.set($event)" class="form-control" placeholder="Ad veya aciklama ile ara" />
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <div class="text-muted small">Toplam urun</div>
+        <div class="fs-3 fw-bold">{{ products().length }}</div>
+      </div>
+    </div>
+  </div>
+
+  @if (!loading()) {
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Urun</th>
+              <th>Kategori</th>
+              <th>Fiyat</th>
+              <th>Stok</th>
+              <th class="text-end">Islemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (filteredProducts().length) {
+              @for (product of filteredProducts(); track product.productId) {
+                <tr>
+                  <td>#{{ product.productId }}</td>
+                  <td>
+                    <div class="fw-semibold">{{ product.productName }}</div>
+                    <div class="text-muted small text-truncate product-desc">{{ product.productDescription }}</div>
+                  </td>
+                  <td>{{ categoryName(product.categoryId) }}</td>
+                  <td>{{ product.productPrice | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                  <td>
+                    <span [class]="productStockBadge(product.productStock)">{{ product.productStock }}</span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" type="button" (click)="openEdit(product)">Duzenle</button>
+                      <button class="btn btn-outline-danger" type="button" (click)="remove(product.productId)">Sil</button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="6" class="text-center py-5 text-muted">Uygun urun bulunamadi.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,89 @@
+<div class="container mt-5">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="mb-0">🛍️ Products</h2>
+    </div>
+    <div class="col-md-4 text-end">
+      <!-- Search -->
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Search products..."
+        [(ngModel)]="searchTerm"
+        (keyup)="onSearchChange()"
+      />
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="mb-4">
+    <button 
+      class="btn me-2"
+      [ngClass]="selectedCategory === 0 ? 'btn-primary' : 'btn-outline-primary'"
+      (click)="filterByCategory(0)"
+    >
+      All Categories
+    </button>
+    <button 
+      *ngFor="let cat of categories"
+      class="btn me-2"
+      [ngClass]="selectedCategory === (cat.id || cat.categoryId) ? 'btn-primary' : 'btn-outline-primary'"
+      (click)="filterByCategory(cat.id || cat.categoryId || 0)"
+    >
+      {{ cat.categoryName }}
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="row g-4" *ngIf="!isLoading && filteredProducts.length > 0">
+      <div *ngFor="let product of filteredProducts" class="col-md-6 col-lg-4">
+          <div class="card h-100 product-card">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.productName }}</h5>
+              <p class="card-text text-truncate">{{ product.productDescription }}</p>
+              <p class="card-text">
+                <strong>Price: {{ product.productPrice | currency }}</strong>
+              </p>
+              <p class="card-text">
+                <span class="badge" [ngClass]="product.productStock > 0 ? 'bg-success' : 'bg-danger'">
+                  {{ product.productStock > 0 ? 'In Stock (' + product.productStock + ')' : 'Out of Stock' }}
+                </span>
+              </p>
+            </div>
+            <div class="card-footer bg-white">
+              <button
+                class="btn btn-info btn-sm"
+                [routerLink]="['/products', product.id || product.productId]"
+              >
+                View Details
+              </button>
+              <button
+                class="btn btn-success btn-sm ms-2"
+                [disabled]="product.productStock === 0"
+                (click)="addToCart(product)"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && filteredProducts.length === 0" class="alert alert-info">
+    No products found. Try adjusting your search or filters.
+  </div>
+</div>

@@ -1,0 +1,310 @@
+<section class="checkout-container">
+  <div class="checkout-header">
+    <h1>Ödemeyi Tamamla</h1>
+  </div>
+
+  <div class="checkout-content">
+    <!-- Left: Forms -->
+    <div class="checkout-forms">
+      <!-- Shipping Address -->
+      <form [formGroup]="shippingForm" class="form-section">
+        <h2 class="section-title">
+          <span class="step-number">1</span>
+          Teslimat Adresi
+        </h2>
+
+        <div class="form-group">
+          <label>Ad Soyad</label>
+          <input type="text" formControlName="fullName" placeholder="Adınız ve soyadınız" class="form-input">
+          @if (getError('fullName')) {
+            <span class="error">Ad soyad zorunludur</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>E-posta</label>
+          <input type="email" formControlName="email" placeholder="example@mail.com" class="form-input">
+          @if (getError('email')) {
+            <span class="error">Geçerli e-posta giriniz</span>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="tel" formControlName="phone" placeholder="+90 5XX XXX XXXX" class="form-input">
+            @if (getError('phone')) {
+              <span class="error">Telefon zorunludur</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Şehir</label>
+            <select formControlName="city" class="form-input">
+              <option value="">Şehir seçin</option>
+              @for (city of cities(); track city.cityCode) {
+                <option [value]="city.cityCode">{{ city.cityName }}</option>
+              }
+            </select>
+            @if (getError('city')) {
+              <span class="error">Şehir zorunludur</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Adres</label>
+          <textarea formControlName="address" placeholder="Mahalle, sokak, bina no." rows="3" class="form-input"></textarea>
+          @if (getError('address')) {
+            <span class="error">Adres zorunludur</span>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>İlçe</label>
+            <input type="text" formControlName="district" placeholder="İlçe" class="form-input">
+            @if (getError('district')) {
+              <span class="error">İlçe zorunludur</span>
+            }
+          </div>
+          <div class="form-group">
+            <label>Posta Kodu</label>
+            <input type="text" formControlName="postalCode" placeholder="34000" class="form-input">
+            @if (getError('postalCode')) {
+              <span class="error">Posta kodu zorunludur</span>
+            }
+          </div>
+        </div>
+      </form>
+
+      <!-- Shipping Method -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <span class="step-number">2</span>
+          Kargo Seçimi
+        </h2>
+
+        <div class="shipping-options">
+          @for (method of shippingMethods(); track method.id) {
+            <label class="shipping-option">
+              <input 
+                type="radio" 
+                name="shipping" 
+                [value]="method.id"
+                [checked]="selectedShipping() === method.id"
+                (change)="selectedShipping.set(method.id)"
+                class="radio-input"
+              >
+              <div class="option-content">
+                <span class="option-name">{{ method.name }}</span>
+                <span class="option-desc">{{ method.description }}</span>
+              </div>
+              <span class="option-price">
+                {{ method.price === 0 ? 'ÜCRETSİZ' : '₺' + method.price }}
+              </span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <form [formGroup]="paymentForm" class="form-section">
+        <h2 class="section-title">
+          <span class="step-number">3</span>
+          Ödeme Seçimi
+        </h2>
+
+        <div class="payment-methods">
+          @for (method of paymentMethods(); track method.id) {
+            <label class="payment-method">
+              <input 
+                type="radio" 
+                name="payment" 
+                [value]="method.id"
+                [checked]="selectedPayment() === method.id"
+                (change)="selectedPayment.set(method.id)"
+                class="radio-input"
+              >
+              <div class="method-icon">
+                <span class="icon-placeholder">{{ method.icon }}</span>
+              </div>
+              <span class="method-name">{{ method.name }}</span>
+            </label>
+          }
+        </div>
+
+        <!-- Credit Card Form -->
+        @if (isCardPaymentSelected()) {
+          <div class="credit-card-form">
+            <div class="card-preview">
+              <div class="card-chip"></div>
+              <div class="card-number">
+                {{ cardNumber() || '**** **** **** ****' }}
+              </div>
+              <div class="card-holder">
+                <small>Kart Sahibi</small>
+                <div>{{ cardholderName() || 'AD SOYAD' }}</div>
+              </div>
+              <div class="card-expiry">
+                <small>Son Kullanma tarihi</small>
+                <div>{{ expiryMonth() }}/{{ expiryYear() }}</div>
+              </div>
+            </div>
+
+            <div class="card-inputs" style="margin-top: 20px;">
+              <div class="form-group">
+                <label>Kart Numarası</label>
+                <input 
+                  type="text" 
+                  placeholder="0000 0000 0000 0000" 
+                  maxlength="19" 
+                  class="form-input card-input"
+                  [value]="cardNumber()"
+                  (input)="cardNumber.set($event.target.value); formatCardNumber()"
+                >
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Kart Sahibi Adı</label>
+                  <input 
+                    type="text" 
+                    placeholder="AD SOYAD" 
+                    class="form-input"
+                    [value]="cardholderName()"
+                    (input)="cardholderName.set($event.target.value)"
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Son Kullanma Tarihi</label>
+                  <input 
+                    type="text" 
+                    placeholder="MM/YY" 
+                    maxlength="5" 
+                    class="form-input"
+                    [value]="expiryDate()"
+                    (input)="expiryDate.set($event.target.value); formatExpiryDate()"
+                  >
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input 
+                    type="password" 
+                    placeholder="***" 
+                    maxlength="4" 
+                    class="form-input"
+                    [value]="cvv()"
+                    (input)="cvv.set($event.target.value)"
+                  >
+                </div>
+              </div>
+
+              <div class="checkbox">
+                <input 
+                  type="checkbox" 
+                  id="save-card"
+                  [checked]="saveCard()"
+                  (change)="saveCard.set(!saveCard())"
+                >
+                <label for="save-card">Bu kartı kaydet</label>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Bank Transfer -->
+        @if (isBankTransferSelected()) {
+          <div class="bank-transfer">
+            <div class="info-box">
+              <p><strong>Banka Transferi İçin:</strong></p>
+              <p>Siparişinizi onayladıktan sonra banka hesabı bilgileri gönderilecektir.</p>
+              <p>Ödeme yapılmadan sipariş onaylanmayacaktır.</p>
+            </div>
+          </div>
+        }
+
+        <!-- Save Invoice -->
+        <div class="checkbox">
+          <input 
+            type="checkbox" 
+            id="invoice"
+            [checked]="requestInvoice()"
+            (change)="requestInvoice.set(!requestInvoice())"
+          >
+          <label for="invoice">Fatura talep et</label>
+        </div>
+
+        <!-- Terms -->
+        <div class="checkbox">
+          <input type="checkbox" id="terms" formControlName="acceptTerms">
+          <label for="terms">
+            <a href="#" class="link">Kullanım şartlarını</a> ve 
+            <a href="#" class="link">gizlilik politikasını</a> kabul ediyorum
+          </label>
+          @if (shippingForm.get('acceptTerms')?.touched && shippingForm.get('acceptTerms')?.invalid) {
+            <span class="error">Şartları kabul etmelisiniz</span>
+          }
+        </div>
+      </form>
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="order-summary">
+      <div class="summary-card">
+        <h2>Sipariş Özeti</h2>
+
+        <div class="summary-items">
+          @for (item of cartItems(); track item.productId) {
+            <div class="summary-item">
+              <div>
+                <p class="item-name">{{ item.productName }}</p>
+                <p class="item-qty">Miktar: {{ item.quantity }}</p>
+              </div>
+              <p class="item-price">₺{{ (item.price * item.quantity) | number: '1.2-2' }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="summary-breakdown">
+          <div class="breakdown-row">
+            <span>Ara Toplam:</span>
+            <span>₺{{ subtotal() | number: '1.2-2' }}</span>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Kargo:</span>
+            <span [class.free]="shippingCost() === 0">
+              {{ shippingCost() === 0 ? 'ÜCRETSİZ' : '₺' + (shippingCost() | number: '1.2-2') }}
+            </span>
+          </div>
+
+          @if (discount() > 0) {
+            <div class="breakdown-row">
+              <span>İndirim:</span>
+              <span class="discount">−₺{{ discount() | number: '1.2-2' }}</span>
+            </div>
+          }
+
+          <div class="divider"></div>
+
+          <div class="breakdown-row total">
+            <span>TOPLAM:</span>
+            <span>₺{{ total() | number: '1.2-2' }}</span>
+          </div>
+        </div>
+
+        <button (click)="completeOrder()" class="complete-order-btn" 
+                [disabled]="!paymentForm.valid">
+          {{ isCardPaymentSelected() ? 'Ödemeyi Tamamla' : 'Siparişi Onayla' }}
+        </button>
+
+        <a routerLink="/cart" class="back-link">Sepete Dön</a>
+      </div>
+    </div>
+  </div>
+</section>

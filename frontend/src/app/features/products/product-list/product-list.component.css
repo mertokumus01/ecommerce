@@ -1,0 +1,48 @@
+.product-card {
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.card-text {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.badge {
+  font-weight: 600;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+h2 {
+  color: #333;
+  font-weight: 700;
+}

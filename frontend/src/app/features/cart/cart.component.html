@@ -1,0 +1,123 @@
+<div class="cart-page">
+  <!-- Page Header - BLACK MINIMAL -->
+  <div class="page-header-minimal">
+    <div class="header-inner">
+      <h1>Alışveriş Sepeti</h1>
+      <p class="header-subtitle">{{ itemCount() }} ürün</p>
+    </div>
+  </div>
+
+  <div class="cart-wrapper">
+    <!-- Cart Items -->
+    <div class="cart-main">
+      <!-- Empty State -->
+      @if (isEmpty()) {
+        <div class="empty-state">
+          <div class="empty-emoji">🛒</div>
+          <h2>Sepetiniz Boş</h2>
+          <p>Başlamak için ürün ekleyin</p>
+          <a routerLink="/products" class="btn-primary-cart">Alışverişe Devam Et</a>
+        </div>
+      }
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="empty-state">
+          <div class="empty-emoji">⏳</div>
+          <h2>Yükleniyor...</h2>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (errorMessage()) {
+        <div class="empty-state" style="background: #fff3cd; border-color: #ffc107;">
+          <h2>Hata</h2>
+          <p>{{ errorMessage() }}</p>
+        </div>
+      }
+
+      <!-- Cart Items List -->
+      @if (!isEmpty() && !isLoading()) {
+        <div class="items-list">
+          @for (item of cartItems(); track item.productId; let i = $index) {
+            <div class="cart-item-minimal">
+              <div class="item-emoji">📦</div>
+              
+              <div class="item-info">
+                <h4>{{ item.productName }}</h4>
+                <p class="item-cat">{{ item.category }}</p>
+              </div>
+
+              <div class="item-qty">
+                <button (click)="decreaseQuantity(i)" class="qty-btn">−</button>
+                <input 
+                  type="number" 
+                  [value]="item.quantity"
+                  (change)="updateQuantity(i, +$event.target.value)"
+                  class="qty-input" 
+                  min="1"
+                >
+                <button (click)="increaseQuantity(i)" class="qty-btn">+</button>
+              </div>
+
+              <div class="item-price">
+                <span class="price-gold">₺{{ (item.price * item.quantity) | number:'1.0-0' }}</span>
+              </div>
+
+              <button (click)="removeItem(i)" class="btn-remove" title="Sil">
+                ✕
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Summary Sidebar -->
+    @if (!isEmpty()) {
+      <aside class="cart-summary-minimal">
+        <div class="summary-box">
+          <h3>Sipariş Özeti</h3>
+          
+          <div class="summary-line">
+            <span>Ara Toplam</span>
+            <span class="value">₺{{ subtotal() | number:'1.0-0' }}</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Kargo</span>
+            <span class="value" [class.free]="shippingCost() === 0">
+              @if (shippingCost() === 0) {
+                ÜCRETSİZ
+              } @else {
+                ₺{{ shippingCost() | number:'1.0-0' }}
+              }
+            </span>
+          </div>
+
+          @if (discount() > 0) {
+            <div class="summary-line discount">
+              <span>İndirim</span>
+              <span class="value disc-value">−₺{{ discount() | number:'1.0-0' }}</span>
+            </div>
+          }
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Toplam</span>
+            <span class="total-price">₺{{ total() | number:'1.0-0' }}</span>
+          </div>
+
+          <button routerLink="/checkout" class="btn-checkout">
+            Ödemeye Geç
+          </button>
+
+          <a routerLink="/products" class="btn-continue">
+            Alışverişe Devam Et
+          </a>
+        </div>
+      </aside>
+    }
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Siparis Kalemleri</p>
+      <h2 class="h3 mb-1">Siparis Kalemi Yonetimi</h2>
+      <p class="text-secondary mb-0">Siparis ile urun arasindaki kalem kayıtları.</p>
+    </div>
+    <button class="btn btn-dark" type="button" (click)="toggleCreate()" [attr.aria-expanded]="showForm">Yeni Kalem</button>
+  </div>
+
+  <div class="collapse mb-4" [class.show]="showForm">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h3 class="h5 mb-1">{{ editMode ? 'Kalem duzenle' : 'Yeni kalem ekle' }}</h3>
+            <p class="text-muted mb-0">Siparis, urun, miktar ve fiyat alanlari.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Kapat</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="orderItemOrder">Siparis</label>
+            <select id="orderItemOrder" [(ngModel)]="form.orderId" class="form-select">
+              <option [ngValue]="null">Siparis secin</option>
+              @for (order of orders; track order.orderId) {
+                <option [ngValue]="order.orderId">{{ orderName(order.orderId) }} - {{ order.orderStatus }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="orderItemProduct">Urun</label>
+            <select id="orderItemProduct" [(ngModel)]="form.productId" class="form-select">
+              <option [ngValue]="null">Urun secin</option>
+              @for (product of products; track product.productId) {
+                <option [ngValue]="product.productId">{{ product.productName }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="orderItemQuantity">Miktar</label>
+            <input id="orderItemQuantity" [(ngModel)]="form.orderItemQuantity" type="number" class="form-control" placeholder="1" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="orderItemPrice">Birim fiyat</label>
+            <input id="orderItemPrice" [(ngModel)]="form.orderItemPrice" type="number" class="form-control" placeholder="0" />
+          </div>
+          <div class="col-12 text-end">
+            <button type="button" class="btn btn-dark" (click)="save()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  }
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-lg-8">
+        <label class="form-label" for="orderItemSearch">Siparis kalemi ara</label>
+        <input id="orderItemSearch" [(ngModel)]="search" (ngModelChange)="applyFilter()" class="form-control" placeholder="Siparis, urun veya kalem ID ile ara" />
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <div class="text-muted small">Toplam kalem</div>
+        <div class="fs-3 fw-bold">{{ orderItems.length }}</div>
+      </div>
+    </div>
+  </div>
+
+  @if (!loading) {
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Siparis</th>
+                <th>Urun</th>
+                <th>Miktar</th>
+                <th>Birim Fiyat</th>
+                <th class="text-end">Islemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (filteredOrderItems.length) {
+                @for (item of filteredOrderItems; track item.orderItemId) {
+                  <tr>
+                    <td>#{{ item.orderItemId }}</td>
+                    <td>{{ orderName(item.orderId) }}</td>
+                    <td>{{ productName(item.productId) }}</td>
+                    <td>{{ item.orderItemQuantity }}</td>
+                    <td>{{ item.orderItemPrice | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                    <td class="text-end">
+                      <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" type="button" (click)="openEdit(item)">Duzenle</button>
+                        <button class="btn btn-outline-danger" type="button" (click)="remove(item.orderItemId)">Sil</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="6" class="text-center py-5 text-muted">Uygun siparis kalemi bulunamadi.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }

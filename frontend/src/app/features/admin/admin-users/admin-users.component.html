@@ -1,0 +1,114 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Kullanicilar</p>
+      <h2 class="h3 mb-1">Kullanici Yonetimi</h2>
+      <p class="text-secondary mb-0">Admin veya normal kullanici kayitlari.</p>
+    </div>
+    <button class="btn btn-dark" type="button" (click)="toggleCreate()" [attr.aria-expanded]="showForm()">Yeni Kullanici</button>
+  </div>
+
+  <div class="collapse mb-4" [class.show]="showForm()">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h3 class="h5 mb-1">{{ editMode() ? 'Kullanici duzenle' : 'Yeni kullanici ekle' }}</h3>
+            <p class="text-muted mb-0">Alanlari etiketleriyle birlikte doldurun.</p>
+          </div>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancel()">Kapat</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="userEmail">E-posta</label>
+            <input id="userEmail" [(ngModel)]="form().userEmail" class="form-control" placeholder="email@site.com" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="userFullName">Ad Soyad</label>
+            <input id="userFullName" [(ngModel)]="form().userFullName" class="form-control" placeholder="Ad Soyad" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="userPhoneNumber">Telefon</label>
+            <input id="userPhoneNumber" [(ngModel)]="form().userPhoneNumber" class="form-control" placeholder="05xx..." />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="userRole">Rol</label>
+            <select id="userRole" [(ngModel)]="form().userRole" class="form-select">
+              <option value="USER">USER</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="userPassword">Sifre {{ editMode() ? '(guncellemek icin doldurun)' : '' }}</label>
+            <input id="userPassword" [(ngModel)]="form().userPassword" type="password" class="form-control" placeholder="••••••••" />
+          </div>
+          <div class="col-md-6 d-flex align-items-end">
+            <button type="button" class="btn btn-dark w-100" (click)="save()">Kaydet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body row g-3 align-items-end">
+      <div class="col-lg-8">
+        <label class="form-label" for="userSearch">Kullanici ara</label>
+        <input id="userSearch" [(ngModel)]="search" (ngModelChange)="applyFilter()" class="form-control" placeholder="Email veya ad soyad ara" />
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <div class="text-muted small">Toplam kullanici</div>
+        <div class="fs-3 fw-bold">{{ users().length }}</div>
+      </div>
+    </div>
+  </div>
+
+  @if (!loading()) {
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Ad Soyad</th>
+                <th>Telefon</th>
+                <th>Rol</th>
+                <th class="text-end">Islemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (filteredUsers().length) {
+                @for (user of filteredUsers(); track user.userId) {
+                <tr>
+                  <td>#{{ user.userId }}</td>
+                  <td>{{ user.userEmail }}</td>
+                  <td>{{ user.userFullName }}</td>
+                  <td>{{ user.userPhoneNumber || '-' }}</td>
+                  <td><span [class]="roleBadge(user.userRole)">{{ user.userRole }}</span></td>
+                  <td class="text-end">
+                    <div class="btn-group btn-group-sm">
+                      <button class="btn btn-outline-primary" type="button" (click)="openEdit(user)">Duzenle</button>
+                      <button class="btn btn-outline-danger" type="button" (click)="remove(user.userId)">Sil</button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="6" class="text-center py-5 text-muted">Uygun kullanici bulunamadi.</td>
+              </tr>
+            }
+          </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>

@@ -1,0 +1,64 @@
+<div class="admin-login-shell">
+  <div class="admin-login-copy">
+    <span class="badge rounded-pill text-bg-light text-dark mb-3">Commerce Admin</span>
+    <h1 class="display-6 fw-bold mb-3">Yonetim Paneli</h1>
+    <p class="lead mb-0">
+      Kullanici, kategori, urun, siparis, siparis kalemi ve yorum tablolari icin tek merkezden veri yonetimi.
+    </p>
+  </div>
+
+  <div class="card shadow-lg border-0 admin-login-card">
+    <div class="card-body p-4 p-md-5">
+      <div class="mb-4">
+        <h2 class="h3 mb-2">Admin Girisi</h2>
+        <p class="text-muted mb-0">Yonetici hesabinizla sisteme giris yapin.</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <form (ngSubmit)="login()" class="needs-validation" novalidate>
+        <div class="mb-3">
+          <label for="adminEmail" class="form-label">E-posta</label>
+          <input
+            id="adminEmail"
+            [(ngModel)]="email"
+            name="email"
+            type="email"
+            class="form-control form-control-lg"
+            placeholder="admin@site.com"
+            autocomplete="username"
+            required
+          />
+          <div class="form-text">Admin hesabinizin e-posta adresi.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="adminPassword" class="form-label">Sifre</label>
+          <input
+            id="adminPassword"
+            [(ngModel)]="password"
+            name="password"
+            type="password"
+            class="form-control form-control-lg"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-dark btn-lg w-100" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            <span>Giris yapiliyor...</span>
+          } @else {
+            <span>Giris Yap</span>
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

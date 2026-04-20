@@ -1,0 +1,42 @@
+.admin-login-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 460px);
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34%),
+    linear-gradient(135deg, #0f172a 0%, #111827 52%, #f8fafc 52%, #f8fafc 100%);
+}
+
+.admin-login-copy {
+  color: #f8fafc;
+  max-width: 560px;
+  padding: 2rem;
+}
+
+.admin-login-copy p {
+  color: rgba(248, 250, 252, 0.82);
+}
+
+.admin-login-card {
+  border-radius: 1.25rem;
+}
+
+@media (max-width: 991.98px) {
+  .admin-login-shell {
+    grid-template-columns: 1fr;
+    background: linear-gradient(180deg, #0f172a 0%, #111827 28%, #f8fafc 28%, #f8fafc 100%);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-login-shell {
+    padding: 1rem;
+  }
+
+  .admin-login-copy {
+    padding: 0.5rem;
+  }
+}

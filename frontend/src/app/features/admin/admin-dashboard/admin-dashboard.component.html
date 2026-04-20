@@ -1,0 +1,142 @@
+<div class="container-fluid px-0">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-muted mb-1">Dashboard</p>
+      <h2 class="h3 mb-1">Veri Ozeti</h2>
+      <p class="text-secondary mb-0">Tüm ana tablolarin canli verileri.</p>
+    </div>
+
+    <button class="btn btn-primary" type="button" (click)="loadDashboardData()" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+        <span>Yukleniyor</span>
+      } @else {
+        <span>Yenile</span>
+      }
+    </button>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="spinner-border text-primary" aria-hidden="true"></div>
+        <div>
+          <div class="fw-semibold">Dashboard verileri aliniyor</div>
+          <div class="text-muted">Lutfen bekleyin...</div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="row g-3 mb-4">
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-primary">
+          <span class="stat-label">Kullanicilar</span>
+          <strong class="stat-value">{{ totalUsers() }}</strong>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-success">
+          <span class="stat-label">Kategoriler</span>
+          <strong class="stat-value">{{ totalCategories() }}</strong>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-warning">
+          <span class="stat-label">Urunler</span>
+          <strong class="stat-value">{{ totalProducts() }}</strong>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-info">
+          <span class="stat-label">Siparisler</span>
+          <strong class="stat-value">{{ totalOrders() }}</strong>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-secondary">
+          <span class="stat-label">Kalemler</span>
+          <strong class="stat-value">{{ totalOrderItems() }}</strong>
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="stat-card border-start border-4 border-danger">
+          <span class="stat-label">Yorumlar</span>
+          <strong class="stat-value">{{ totalReviews() }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <h3 class="h5 mb-1">Son Siparisler</h3>
+            <p class="text-muted mb-0">Siparis durumu, tutar ve tarih</p>
+          </div>
+          <div class="card-body pt-3">
+            @if (recentOrders().length) {
+              <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Kullanici</th>
+                      <th>Durum</th>
+                      <th>Toplam</th>
+                      <th>Tarih</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (order of recentOrders(); track order.orderId) {
+                      <tr>
+                        <td>#{{ order.orderId }}</td>
+                        <td>{{ getUserName(order.userId) }}</td>
+                        <td><span [class]="getOrderStatusBadge(order.orderStatus)">{{ order.orderStatus }}</span></td>
+                        <td>{{ order.orderTotalAmount | currency:'TRY':'symbol-narrow':'1.0-0' }}</td>
+                        <td>{{ order.orderCreatedDate | date: 'short' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <div class="alert alert-light border mb-0">Henüz siparis yok.</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <h3 class="h5 mb-1">Son Yorumlar</h3>
+            <p class="text-muted mb-0">Puan ve yorum ozeti</p>
+          </div>
+          <div class="card-body pt-3">
+            @if (recentReviews().length) {
+              <div class="vstack gap-3">
+                @for (review of recentReviews(); track review.reviewId) {
+                  <div class="review-item">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <strong>{{ review.reviewComment }}</strong>
+                      <span [class]="getReviewBadge(review.reviewRating)">{{ review.reviewRating }}/5</span>
+                    </div>
+                    <div class="text-muted small">{{ getUserName(review.userId) }} • Urun #{{ review.productId }}</div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="alert alert-light border mb-0">Henüz yorum yok.</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

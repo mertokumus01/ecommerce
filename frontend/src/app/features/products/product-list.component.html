@@ -1,0 +1,152 @@
+<div class="products-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Ürün Kataloğu</h1>
+      <p>Mükemmel tasarlanmış ürünler</p>
+    </div>
+  </div>
+
+  <!-- Main Products Section -->
+  <div class="products-main">
+    <!-- Left Sidebar - Filters -->
+    <aside class="filters-sidebar">
+      <div class="filter-group">
+        <h3>KATEGORİLER</h3>
+        <div class="category-list">
+          <button
+            class="category-btn"
+            [class.active]="selectedCategory() === null"
+            (click)="filterByCategory(null)"
+          >
+            Tümü
+          </button>
+          @for (cat of categories(); track cat.categoryId) {
+            <button
+              class="category-btn"
+              [class.active]="selectedCategory() === (cat.categoryId ?? null)"
+              (click)="filterByCategory(cat.categoryId ?? null)"
+            >
+              {{ cat.categoryName }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-group">
+        <button class="reset-btn" (click)="resetFilters()">
+          FİLTRELERİ SIFIRLA
+        </button>
+      </div>
+
+      <div class="filter-stats">
+        <div class="stat">
+          <span class="stat-label">Toplam</span>
+          <span class="stat-value">{{ totalProducts() }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Görüntülenen</span>
+          <span class="stat-value">{{ shownProducts() }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Content - Products Gallery -->
+    <section class="products-content">
+      <!-- Search Bar -->
+      <div class="search-minimal">
+        <input
+          type="text"
+          placeholder="Ürün ara..."
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          class="search-input"
+        />
+      </div>
+
+      <!-- Loading State -->
+      @if (isLoading()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Yükleniyor...</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if (errorMessage() && !isLoading()) {
+        <div class="error-state">
+          <p>{{ errorMessage() }}</p>
+        </div>
+      }
+
+      <!-- Products Gallery -->
+      @if (!isLoading() && filteredProducts().length > 0) {
+        <div class="gallery">
+          @for (product of filteredProducts(); track product.productId) {
+            <div class="gallery-item">
+              <div class="gallery-card">
+                <!-- Badge -->
+                <div class="gallery-badge">
+                  @if (product.productStock === 0) {
+                    <span class="badge-out">Stokta Yok</span>
+                  }
+                  @if (product.productStock > 0 && product.productStock <= 5) {
+                    <span class="badge-low">Son Ürünler</span>
+                  }
+                </div>
+
+                <!-- Product Image/Icon -->
+                <div class="gallery-image">
+                  <div class="product-emoji">📦</div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="gallery-info">
+                  <h4 class="gallery-title">{{ product.productName }}</h4>
+                  <p class="gallery-desc">{{ product.productDescription }}</p>
+
+                  <div class="gallery-meta">
+                    <span class="meta-cat">{{ getCategoryName(product.categoryId) }}</span>
+                    <span class="meta-stock">Stok: {{ product.productStock }}</span>
+                  </div>
+
+                  <div class="gallery-footer">
+                    <span class="price">₺{{ product.productPrice | number:'1.0-0' }}</span>
+                    <a
+                      [routerLink]="['/products', product.id || product.productId]"
+                      class="view-btn"
+                      [class.disabled]="product.productStock === 0"
+                    >
+                      Detay →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!isLoading() && filteredProducts().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">😕</div>
+          <h3>Ürün Bulunamadı</h3>
+          <p>Arama kriterlerinize uygun ürün yok.</p>
+          <button class="reset-btn-empty" (click)="resetFilters()">
+            FİLTRELERİ SIFIRLA
+          </button>
+        </div>
+      }
+
+      <!-- Results Summary -->
+      @if (filteredProducts().length > 0 && !isLoading()) {
+        <div class="results-summary">
+          <p>{{ shownProducts() }} ürün gösteriliyor</p>
+        </div>
+      }
+    </section>
+  </div>
+</div>

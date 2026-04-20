@@ -1,0 +1,105 @@
+<div class="login-page">
+  <!-- Left - Brand (Minimal) -->
+  <div class="login-brand">
+    <div class="brand-content">
+      <h1 class="brand-title">SatışHub</h1>
+      <p class="brand-subtitle">Premium Ürünler<br>Sade Tasarım</p>
+      <div class="brand-features">
+        <div class="feature">✓ Hızlı Kargo</div>
+        <div class="feature">✓ Güvenli Ödeme</div>
+        <div class="feature">✓ 7/24 Destek</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right - Form (Minimal) -->
+  <div class="login-form-container">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Giriş Yap</h2>
+        <p>Hesabına giriş yap</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #form="ngForm">
+        <!-- Email/Username -->
+        <div class="form-group">
+          <label for="email">E-MAIL</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            [(ngModel)]="formData.email"
+            placeholder="your@email.com"
+            required
+            (blur)="validateEmail()"
+          />
+          @if (emailError) {
+            <span class="error-text">{{ emailError }}</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">ŞİFRE</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="formData.password"
+            placeholder="••••••••"
+            required
+            (blur)="validatePassword()"
+          />
+          @if (passwordError) {
+            <span class="error-text">{{ passwordError }}</span>
+          }
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
+            id="remember"
+            name="remember"
+            [(ngModel)]="formData.remember"
+          />
+          <label for="remember">Beni hatırla</label>
+        </div>
+
+        <!-- Error Message -->
+        @if (serverError) {
+          <div class="alert alert-error">{{ serverError }}</div>
+        }
+
+        <!-- Success Message -->
+        @if (successMessage) {
+          <div class="alert alert-success">{{ successMessage }}</div>
+        }
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="isLoading || !form.valid"
+        >
+          @if (!isLoading) {
+            <span>GIRIŞ YAP</span>
+          }
+          @if (isLoading) {
+            <span>Giriş yapılıyor...</span>
+          }
+        </button>
+      </form>
+
+      <!-- Forgot Password -->
+      <div class="forgot-password">
+        <a href="javascript:void(0)">Şifremi unuttum?</a>
+      </div>
+
+      <!-- Register Link -->
+      <div class="form-footer">
+        <p>Üye değil misin? <a routerLink="/auth/register">Kayıt ol</a></p>
+      </div>
+    </div>
+  </div>
+</div>

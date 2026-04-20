@@ -1,0 +1,160 @@
+<div class="register-page">
+  <!-- Left - Brand (Minimal) -->
+  <div class="register-brand">
+    <div class="brand-content">
+      <h1 class="brand-title">SatışHub</h1>
+      <p class="brand-subtitle">Premium Ürünler<br>Sade Tasarım</p>
+      <div class="brand-benefits">
+        <div class="benefit">✓ Hızlı Kargo</div>
+        <div class="benefit">✓ Güvenli Ödeme</div>
+        <div class="benefit">✓ 7/24 Destek</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right - Form (Minimal) -->
+  <div class="register-form-container">
+    <div class="form-wrapper">
+      <div class="form-header">
+        <h2>Kayıt Ol</h2>
+        <p>Hesap oluştur</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #form="ngForm">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">E-MAIL</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="formData.email"
+            placeholder="your@email.com"
+            required
+            email
+            (blur)="validateEmail()"
+          />
+          @if (emailError) {
+            <span class="error-text">{{ emailError }}</span>
+          }
+        </div>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="fullname">AD SOYAD</label>
+          <input
+            type="text"
+            id="fullname"
+            name="fullname"
+            [(ngModel)]="formData.fullname"
+            placeholder="İsim Soyisim"
+            required
+            minlength="3"
+            (blur)="validateFullName()"
+          />
+          @if (fullnameError) {
+            <span class="error-text">{{ fullnameError }}</span>
+          }
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">TELEFON (10 HANELI)</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            [(ngModel)]="formData.phone"
+            placeholder="5551234567"
+            required
+            pattern="[0-9]{10}"
+            (blur)="validatePhone()"
+          />
+          @if (phoneError) {
+            <span class="error-text">{{ phoneError }}</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">ŞİFRE (8+ KARAKTER, BÜYÜK HARF, SAYI, ÖZEL KARAKTER !@#$%^&*.)</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="formData.password"
+            placeholder="••••••••"
+            required
+            minlength="8"
+            pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).{8,}$"
+            (blur)="validatePassword()"
+            (input)="validatePassword()"
+          />
+          @if (passwordError) {
+            <span class="error-text">{{ passwordError }}</span>
+          }
+          @if (formData.password && !passwordError) {
+            <span class="success-text">✓ Şifre geçerlilidir</span>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">ŞİFRE ONAYI</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            [(ngModel)]="formData.confirmPassword"
+            placeholder="••••••••"
+            required
+            (blur)="validateConfirmPassword()"
+          />
+          @if (confirmPasswordError) {
+            <span class="error-text">{{ confirmPasswordError }}</span>
+          }
+        </div>
+
+        <!-- Agreement -->
+        <div class="form-checkbox">
+          <input
+            type="checkbox"
+            id="agree"
+            name="agree"
+            [(ngModel)]="formData.agree"
+            required
+          />
+          <label for="agree">Şartları kabul ediyorum</label>
+        </div>
+
+        <!-- Error Message -->
+        @if (serverError) {
+          <div class="alert alert-error">{{ serverError }}</div>
+        }
+
+        <!-- Success Message -->
+        @if (successMessage) {
+          <div class="alert alert-success">{{ successMessage }}</div>
+        }
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="isLoading || !form.valid"
+        >
+          @if (!isLoading) {
+            <span>KAYIT OL</span>
+          }
+          @if (isLoading) {
+            <span>Kaydediliyor...</span>
+          }
+        </button>
+      </form>
+
+      <div class="form-footer">
+        <p>Zaten hesabın var mı? <a routerLink="/auth/login">Giriş yap</a></p>
+      </div>
+    </div>
+  </div>
+</div>
