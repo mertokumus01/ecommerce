@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce App - Test Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .timestamp {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .status-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .status-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        .status-pass {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .status-fail {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        .status-warn {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: #333;
+        }
+        .status-number {
+            font-size: 2.5em;
+            display: block;
+            margin: 10px 0;
+        }
+        .section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .test-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .test-pass {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+        }
+        .test-fail {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+        .test-warn {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+        }
+        .test-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .pass-status {
+            background: #28a745;
+            color: white;
+        }
+        .fail-status {
+            background: #dc3545;
+            color: white;
+        }
+        .warn-status {
+            background: #ffc107;
+            color: #333;
+        }
+        .access-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .access-link {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border: 2px solid #667eea;
+        }
+        .access-link strong {
+            color: #667eea;
+        }
+        .access-link a {
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .access-link a:hover {
+            text-decoration: underline;
+        }
+        .final-status {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+        .final-status h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .final-status p {
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+        .container-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .container-item {
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border-top: 3px solid #667eea;
+        }
+        .container-item strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 E-Commerce Application</h1>
+            <h2 style="color: #667eea; font-size: 1.3em;">Comprehensive System Test Report</h2>
+            <p class="timestamp">Generated: April 15, 2026 14:38:34</p>
+        </div>
+
+        <div class="status-summary">
+            <div class="status-card status-pass">
+                <strong>TOTAL TESTS</strong>
+                <span class="status-number">13</span>
+                <small>100% Passed</small>
+            </div>
+            <div class="status-card status-pass">
+                <strong>PASSED</strong>
+                <span class="status-number">13</span>
+                <small>All Systems Go</small>
+            </div>
+            <div class="status-card status-warn">
+                <strong>WARNINGS</strong>
+                <span class="status-number">0</span>
+                <small>No Issues</small>
+            </div>
+            <div class="status-card status-fail">
+                <strong>FAILED</strong>
+                <span class="status-number">0</span>
+                <small>All Green</small>
+            </div>
+        </div>
+
+        <div class="final-status">
+            <h3>✅ ALL SYSTEMS OPERATIONAL!</h3>
+            <p>🎉 Deployment Successful</p>
+            <p>🚀 Ready for Production</p>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Docker Container Status</h2>
+            <div class="container-info">
+                <div class="container-item">
+                    <strong>ecommerce-oracle</strong><br>
+                    Status: <span style="color: #28a745;">HEALTHY</span><br>
+                    Service: Oracle 21c XE<br>
+                    Port: 1521
+                </div>
+                <div class="container-item">
+                    <strong>ecommerce-api</strong><br>
+                    Status: <span style="color: #28a745;">HEALTHY</span><br>
+                    Service: Spring Boot 4.0.5<br>
+                    Port: 8080
+                </div>
+                <div class="container-item">
+                    <strong>ecommerce-web</strong><br>
+                    Status: <span style="color: #28a745;">HEALTHY</span><br>
+                    Service: Angular 21 + Nginx<br>
+                    Port: 80
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Backend API Tests</h2>
+            <div class="test-item test-pass">
+                <span class="test-name">Health Endpoint (/actuator/health)</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+            <div class="test-item test-pass">
+                <span class="test-name">Info Endpoint (/actuator/info)</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Database Tests</h2>
+            <div class="test-item test-pass">
+                <span class="test-name">Database Connection Health</span>
+                <span class="test-status pass-status">PASS</span>
+            </div>
+            <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 5px;">
+                <strong>Database Configuration:</strong><br>
+                Service: Oracle 21c XE<br>
+                User: ECOMMERCEAPI<br>
+                Database: XEPDB1<br>
+                Connection URL: jdbc:oracle:thin:@//oracle:1521/XEPDB1
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Frontend Tests</h2>
+            <div class="test-item test-pass">
+                <span class="test-name">Frontend Server (Nginx)</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+            <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 5px;">
+                <strong>Frontend Stack:</strong><br>
+                Framework: Angular 21<br>
+                Server: Nginx 1.25-Alpine<br>
+                Build Type: Production (optimized)<br>
+                Bundle Size: ~75MB container
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ API Endpoint Tests</h2>
+            <div class="test-item test-pass">
+                <span class="test-name">Metrics Endpoint</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+            <div class="test-item test-pass">
+                <span class="test-name">Liveness State Endpoint</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+            <div class="test-item test-pass">
+                <span class="test-name">Readiness State Endpoint</span>
+                <span class="test-status pass-status">PASS 200</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>6️⃣ Port & Service Tests</h2>
+            <div class="test-item test-pass">
+                <span class="test-name">Port 80 (Frontend - Nginx)</span>
+                <span class="test-status pass-status">LISTENING</span>
+            </div>
+            <div class="test-item test-pass">
+                <span class="test-name">Port 8080 (Backend API - Spring Boot)</span>
+                <span class="test-status pass-status">LISTENING</span>
+            </div>
+            <div class="test-item test-pass">
+                <span class="test-name">Port 1521 (Database - Oracle)</span>
+                <span class="test-status pass-status">LISTENING</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>7️⃣ Docker Images</h2>
+            <div style="margin-top: 15px;">
+                <div style="padding: 10px; background: white; border-radius: 5px; margin: 5px 0;">
+                    <strong>ecommerce-backend</strong><br>
+                    <small>554 MB | Java 21 + Spring Boot 4.0.5 + Tomcat 11</small>
+                </div>
+                <div style="padding: 10px; background: white; border-radius: 5px; margin: 5px 0;">
+                    <strong>ecommerce-frontend</strong><br>
+                    <small>75.2 MB | Angular 21 + Nginx 1.25-Alpine</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔗 Access Points</h2>
+            <div class="access-points">
+                <div class="access-link">
+                    <strong>Frontend</strong><br>
+                    <a href="http://localhost" target="_blank">http://localhost</a>
+                </div>
+                <div class="access-link">
+                    <strong>Backend API</strong><br>
+                    <a href="http://localhost:8080/api" target="_blank">http://localhost:8080/api</a>
+                </div>
+                <div class="access-link">
+                    <strong>Swagger Docs</strong><br>
+                    <a href="http://localhost:8080/api/swagger-ui.html" target="_blank">http://localhost:8080/api/swagger-ui.html</a>
+                </div>
+                <div class="access-link">
+                    <strong>Health Check</strong><br>
+                    <a href="http://localhost:8080/api/actuator/health" target="_blank">http://localhost:8080/api/actuator/health</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💾 Database Connection</h2>
+            <div style="padding: 15px; background: white; border-radius: 5px;">
+                <strong>Connection Details:</strong><br>
+                Type: Oracle 21c XE<br>
+                Host: localhost<br>
+                Port: 1521<br>
+                Database: XEPDB1<br>
+                Username: ECOMMERCEAPI<br>
+                Password: ecommerce123<br>
+                <br>
+                <strong>JDBC URL:</strong><br>
+                jdbc:oracle:thin:@//oracle:1521/XEPDB1
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 System Information</h2>
+            <div style="padding: 15px; background: white; border-radius: 5px;">
+                <strong>Stack Overview:</strong><br><br>
+                <strong>Backend:</strong> Spring Boot 4.0.5, Java 21, Tomcat 11.0.20, Hibernate 7.2.7<br>
+                <strong>Frontend:</strong> Angular 21, TypeScript 5.x, Bootstrap 5, Nginx 1.25<br>
+                <strong>Database:</strong> Oracle 21c XE with ECOMMERCEAPI user<br>
+                <strong>DevOps:</strong> Docker, Docker Compose 2.20+<br>
+                <strong>Build Tools:</strong> Maven 3.9.12, Node.js 20-Alpine
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 30px; color: #999;">
+            <p>E-Commerce Application - Comprehensive Test Report</p>
+            <p>Generated: April 15, 2026 14:38:34 UTC</p>
+        </div>
+    </div>
+</body>
+</html>

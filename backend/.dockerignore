@@ -1,0 +1,16 @@
+.git
+.gitignore
+*.md
+.vscode
+.idea
+*.iml
+target/
+out/
+.DS_Store
+.classpath
+.project
+.settings/
+*.log
+test/
+.env.local
+*.jar
